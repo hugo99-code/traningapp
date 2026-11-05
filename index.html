@@ -1,0 +1,449 @@
+<!DOCTYPE html>
+<html lang="sv">
+<head>
+  <meta charset="UTF-8">
+  <meta name="viewport" content="width=device-width, initial-scale=1.0">
+  <title>HybridOS — Concurrent Training Platform</title>
+  <link rel="stylesheet" href="styles.css">
+  <link rel="preconnect" href="https://fonts.googleapis.com">
+  <link rel="preconnect" href="https://fonts.gstatic.com" crossorigin>
+  <link href="https://fonts.googleapis.com/css2?family=Inter:wght@400;500;600;700;800&family=JetBrains+Mono:wght@500;700&display=swap" rel="stylesheet">
+</head>
+<body>
+  <div class="app-layout">
+    <aside class="sidebar">
+      <div class="brand">
+        <span class="brand-badge">⚡ HYBRID-OS</span>
+        <h1>Concurrent Coach</h1>
+      </div>
+
+      <nav class="nav-menu">
+        <button class="nav-btn active" data-tab="dashboard">📊 Dashboard</button>
+        <button class="nav-btn" data-tab="schema-maker">📋 Skapa Schema</button>
+        <button class="nav-btn" data-tab="active-plan">🏋️ Aktivt Schema</button>
+        <button class="nav-btn" data-tab="workout-logger">⏱️ Logg & Garmin</button>
+        <button class="nav-btn" data-tab="gamification">🏆 Gamification & Avatar</button>
+        <button class="nav-btn" data-tab="analytics">📈 Statistik & Mål</button>
+      </nav>
+
+      <div class="user-quick-card">
+        <div class="avatar-preview-badge" id="sidebar-avatar">🏃‍♂️</div>
+        <div>
+          <div class="user-name" id="sidebar-name">Hybrid Athlete</div>
+          <div class="user-stats">Nivå <span id="sidebar-level">1</span> • <span id="sidebar-xp">0</span> XP</div>
+        </div>
+      </div>
+    </aside>
+
+    <main class="content-area">
+      <!-- DASHBOARD -->
+      <section id="tab-dashboard" class="tab-view active">
+        <header class="section-header">
+          <h2>Översikt</h2>
+          <p class="subtitle">Hantera träningsvolym, dagliga utmaningar och återhämtningsbalans.</p>
+        </header>
+
+        <div class="kpi-grid">
+          <div class="kpi-card">
+            <span class="kpi-label">Dagens Fokus</span>
+            <div class="kpi-value highlight" id="dash-todays-focus">Löpspecifik Styrka</div>
+            <span class="kpi-sub">Interferensstatus: <strong class="badge-ok">Optimal</strong></span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Veckans Löpvolym</span>
+            <div class="kpi-value" id="dash-running-km">18.5 km</div>
+            <span class="kpi-sub">Mål: 22.0 km (Zon 2 fokus)</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Gym Tonnage</span>
+            <div class="kpi-value" id="dash-gym-tonnage">24 150 kg</div>
+            <span class="kpi-sub">PPL Split cykel 1</span>
+          </div>
+          <div class="kpi-card">
+            <span class="kpi-label">Garmin Sync</span>
+            <div class="kpi-value success" id="dash-garmin-status">Ansluten</div>
+            <span class="kpi-sub">Senaste sync: Idag 07:15</span>
+          </div>
+        </div>
+
+        <div class="dashboard-grid">
+          <div class="card">
+            <div class="card-header">
+              <h3>⚡ Dagens Daily Challenge</h3>
+              <span class="badge-xp">+150 XP</span>
+            </div>
+            <p id="daily-challenge-text">Kör 5 km i ren Zon 2 följt av rörlighet för baksida lår.</p>
+            <button class="btn btn-secondary" id="btn-complete-challenge">Markera som slutförd</button>
+          </div>
+
+          <div class="card">
+            <div class="card-header">
+              <h3>🛡️ Interferensskydd & Biomekanik</h3>
+            </div>
+            <ul class="clean-list">
+              <li>Separera tunga benpass och högintensiva löpintervaller med <strong>minst 6–8 timmar</strong>.</li>
+              <li>Genomför aerob baslöpning (Zon 2) på morgonen vid dubbelpass för att prioritera mTOR-signalering vid kvällens styrketräning.</li>
+              <li>Håll koll på återhämtningspulsen vid uppvaknande.</li>
+            </ul>
+          </div>
+        </div>
+      </section>
+
+      <!-- SCHEMA MAKER FORM -->
+      <section id="tab-schema-maker" class="tab-view">
+        <header class="section-header">
+          <h2>Fysiologiskt Schemagenerator-Formulär</h2>
+          <p class="subtitle">Mallen analyserar interferenseffekten mellan mTOR och AMPK för att skapa en optimerad 4-veckors mesocykel.</p>
+        </header>
+
+        <form id="concurrent-coach-form" class="coach-form">
+          <!-- 1. Grundprofil -->
+          <div class="form-section">
+            <h3>1. Grundprofil & Fysiologiska förutsättningar</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Ålder</label>
+                <input type="number" id="f-age" value="24" required>
+              </div>
+              <div class="form-group">
+                <label>Kön</label>
+                <select id="f-gender">
+                  <option value="Man" selected>Man</option>
+                  <option value="Kvinna">Kvinna</option>
+                  <option value="Annat">Annat</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Längd & Nuvarande vikt</label>
+                <input type="text" id="f-height-weight" value="198 cm, 95 kg" placeholder="t.ex. 185 cm, 82 kg">
+              </div>
+              <div class="form-group">
+                <label>Träningsbakgrund</label>
+                <input type="text" id="f-background" value="4 år styrketräning, 2 år hybridlöpning">
+              </div>
+              <div class="form-group full-width">
+                <label>Nuvarande styrkenivå (1RM eller arbetsvikter)</label>
+                <input type="text" id="f-strength-level" value="Knäböj 130kg, Bänkpress 105kg, Marklyft 170kg, Chins +20kg">
+              </div>
+              <div class="form-group">
+                <label>Nuvarande konditionsnivå</label>
+                <input type="text" id="f-cardio-level" value="5 km på 23:45, Cooper: 2850m">
+              </div>
+              <div class="form-group">
+                <label>Skador, smärtproblematik, begränsningar</label>
+                <input type="text" id="f-injuries" value="Lätt känning i patellasena vid för snabb volymökning">
+              </div>
+            </div>
+          </div>
+
+          <!-- 2. Målsättning -->
+          <div class="form-section">
+            <h3>2. Målsättning & Prioritetsordning</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Primärt huvudmål (Prio 1)</label>
+                <input type="text" id="f-prio1" value="Hypertrofi & Explosiv överkroppsstyrka (Muscle-up progression)">
+              </div>
+              <div class="form-group">
+                <label>Sekundärt mål (Prio 2)</label>
+                <input type="text" id="f-prio2" value="Bibehålla sub-23 min 5 km och aerob bastålighet">
+              </div>
+              <div class="form-group">
+                <label>Tidsram</label>
+                <input type="text" id="f-timeframe" value="4-veckors mesocykel + 1 deload">
+              </div>
+              <div class="form-group">
+                <label>Mätbara milstolpar</label>
+                <input type="text" id="f-milestones" value="Kroppsvikt 98-100 kg, +5 kg i stångrodd, 5 km på 22:50">
+              </div>
+            </div>
+          </div>
+
+          <!-- 3. Tillgänglighet & Logistiska ramar -->
+          <div class="form-section">
+            <h3>3. Tillgänglighet & Logistiska ramar</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Dagar per vecka tillgängliga</label>
+                <input type="number" id="f-days-per-week" min="3" max="7" value="6">
+              </div>
+              <div class="form-group">
+                <label>Tillgänglig tid per pass (min)</label>
+                <input type="text" id="f-session-duration" value="60-75 minuter">
+              </div>
+              <div class="form-group">
+                <label>Möjlighet till dubbla pass samma dag</label>
+                <select id="f-double-sessions">
+                  <option value="Ja" selected>Ja (Morgon löpning kl 07:00 + Kväll gym kl 17:30)</option>
+                  <option value="Nej">Nej</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Utrustningstillgång</label>
+                <input type="text" id="f-equipment" value="Fullt utrustat gym & utomhusspår">
+              </div>
+            </div>
+          </div>
+
+          <!-- 4. Styrketräningspreferenser -->
+          <div class="form-section">
+            <h3>4. Styrketräningspreferenser</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Önskad split/upplägg</label>
+                <select id="f-split">
+                  <option value="PPL" selected>Push / Pull / Legs (PPL)</option>
+                  <option value="UL">Överkropp / Underkropp</option>
+                  <option value="Fullbody">Helkropp</option>
+                </select>
+              </div>
+              <div class="form-group">
+                <label>Fokusövningar</label>
+                <input type="text" id="f-focus-exercises" value="Tunga drag (Skivstångsrodd, Latsdrag), explosiva pull-ups, bänkpress">
+              </div>
+              <div class="form-group">
+                <label>Övningar som ska exkluderas</label>
+                <input type="text" id="f-exclude-exercises" value="Vanliga tunga konventionella marklyft från golv">
+              </div>
+            </div>
+          </div>
+
+          <!-- 5. Konditionsmodalitet & Struktur -->
+          <div class="form-section">
+            <h3>5. Konditionsmodalitet & Struktur</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Typ av konditionsträning</label>
+                <input type="text" id="f-cardio-type" value="Utomhuslöpning (grus & asfalt)">
+              </div>
+              <div class="form-group">
+                <label>Önskad fördelning</label>
+                <input type="text" id="f-cardio-distribution" value="80% Zon 2 lågintensivt, 20% tröskelintervaller">
+              </div>
+              <div class="form-group">
+                <label>Nuvarande veckovolym i kondition</label>
+                <input type="text" id="f-weekly-running-vol" value="20 km fördelat på 4 morgonpass">
+              </div>
+            </div>
+          </div>
+
+          <!-- 6. Återhämtning & Livsstil -->
+          <div class="form-section">
+            <h3>6. Återhämtning & Livsstil</h3>
+            <div class="form-grid">
+              <div class="form-group">
+                <label>Sömn per natt</label>
+                <input type="text" id="f-sleep" value="7.5 - 8.0 timmar">
+              </div>
+              <div class="form-group">
+                <label>Kostupplägg och kaloriintag</label>
+                <input type="text" id="f-nutrition" value="Kaloriöverskott: 3 700 kcal, 200g protein">
+              </div>
+              <div class="form-group">
+                <label>Vardagsaktivitet / Stressnivå</label>
+                <input type="text" id="f-stress" value="Stillasittande studier/kodning, ~8 500 vardagssteg, kontrollerad stress">
+              </div>
+            </div>
+          </div>
+
+          <div class="form-actions">
+            <button type="button" class="btn btn-primary btn-large" id="btn-generate-plan">
+              ⚡ Generera Fysiologiskt Periodiserat Schema
+            </button>
+          </div>
+        </form>
+      </section>
+
+      <!-- ACTIVE PLAN VIEW -->
+      <section id="tab-active-plan" class="tab-view">
+        <header class="section-header">
+          <h2>Aktivt Periodiserat Träningsschema</h2>
+          <p class="subtitle">Strukturerat för att minimera interferenseffekten mellan AMPK (löpning) och mTORC1 (hypertrofi).</p>
+        </header>
+
+        <div class="plan-summary-box" id="plan-fyi-box">
+          <div class="fyi-title">Fysiologiska Riktlinjer för din cykel:</div>
+          <div id="plan-principles-text">Generera ett schema i formuläret för att visa din specifika träningsperiodisering.</div>
+        </div>
+
+        <div class="week-selector" id="week-selector-container">
+          <button class="week-btn active" data-week="1">Vecka 1: Acklimatisering</button>
+          <button class="week-btn" data-week="2">Vecka 2: Volymökning</button>
+          <button class="week-btn" data-week="3">Vecka 3: Intensitetstopp</button>
+          <button class="week-btn" data-week="4">Vecka 4: Deload & Superkompensation</button>
+        </div>
+
+        <div id="generated-schedule-content" class="schedule-container">
+          <!-- Populated by generator.js -->
+        </div>
+      </section>
+
+      <!-- WORKOUT LOGGER & GARMIN SYNC -->
+      <section id="tab-workout-logger" class="tab-view">
+        <header class="section-header">
+          <h2>Träningslogg & Garmin Connect Sync</h2>
+          <p class="subtitle">Registrera sets, reps, RIR och tempo, eller hämta data direkt från din Garmin Forerunner/Fenix.</p>
+        </header>
+
+        <div class="garmin-banner card">
+          <div class="garmin-left">
+            <div class="garmin-logo">GARMIN<span>.</span></div>
+            <div>
+              <h4>Garmin Health & FIT API Connector</h4>
+              <p>Senaste klocksynk: <span id="garmin-sync-time">Ej synkad idag</span></p>
+            </div>
+          </div>
+          <button class="btn btn-garmin" id="btn-sync-garmin">🔄 Synka Garmin Klocka</button>
+        </div>
+
+        <div class="logger-layout">
+          <div class="card">
+            <h3>Registrera Träningspass</h3>
+            <form id="manual-log-form">
+              <div class="form-grid">
+                <div class="form-group">
+                  <label>Passtyp</label>
+                  <select id="log-type">
+                    <option value="Löpning">Löpning (Distans / Intervall)</option>
+                    <option value="Gym - Push">Gym - Push</option>
+                    <option value="Gym - Pull">Gym - Pull (Rygg/Biceps/Chins)</option>
+                    <option value="Gym - Legs">Gym - Legs</option>
+                  </select>
+                </div>
+                <div class="form-group">
+                  <label>Titel / Passnamn</label>
+                  <input type="text" id="log-title" placeholder="t.ex. Morgonjogg 5 km Zon 2" required>
+                </div>
+                <div class="form-group">
+                  <label>Distans (km) eller Tonnage (kg)</label>
+                  <input type="number" step="0.1" id="log-metric" placeholder="t.ex. 5.2 eller 8400" required>
+                </div>
+                <div class="form-group">
+                  <label>Varaktighet (minuter)</label>
+                  <input type="number" id="log-duration" placeholder="45" required>
+                </div>
+                <div class="form-group full-width">
+                  <label>Anteckningar (RPE / Snittpuls / Skadekänning)</label>
+                  <input type="text" id="log-notes" placeholder="RPE 7, snittpuls 138 bpm, lätt i benen">
+                </div>
+              </div>
+              <button type="submit" class="btn btn-primary" style="margin-top: 15px;">💾 Spara Pass</button>
+            </form>
+          </div>
+
+          <div class="card">
+            <h3>Senaste Registrerade Pass</h3>
+            <div class="recent-logs-list" id="recent-logs-list">
+              <!-- Rendered by app.js -->
+            </div>
+          </div>
+        </div>
+      </section>
+
+      <!-- GAMIFICATION & AVATAR -->
+      <section id="tab-gamification" class="tab-view">
+        <header class="section-header">
+          <h2>Gamification, Avatar & Vänner</h2>
+          <p class="subtitle">Samla XP genom genomförda dubbelpass, tävla på topplistan och anpassa din avatar.</p>
+        </header>
+
+        <div class="gamification-grid">
+          <!-- Avatar Creator -->
+          <div class="card">
+            <h3>🎨 Skapa Din Avatar</h3>
+            <div class="avatar-stage">
+              <div class="avatar-canvas-box" id="avatar-render-box">
+                <div class="avatar-head" id="av-head">⚡</div>
+                <div class="avatar-torso" id="av-torso">🏋️</div>
+                <div class="avatar-legs" id="av-legs">🩳</div>
+              </div>
+              <div class="avatar-badge-display">
+                <span class="badge" id="av-archetype-tag">Hybrid Engine</span>
+              </div>
+            </div>
+
+            <div class="avatar-customizer">
+              <label>Archetype / Arketyp</label>
+              <select id="av-select-archetype">
+                <option value="Hybrid Engine">Hybrid Engine (Löpning + Styrka)</option>
+                <option value="Power Runner">Power Runner (Snabbhet + Spänst)</option>
+                <option value="Heavy Lifter">Hypertrophy Juggernaut</option>
+              </select>
+
+              <label>Utrustningsfärg / Aura</label>
+              <div class="color-picker-row">
+                <button class="color-dot active" data-color="#10b981" style="background:#10b981;"></button>
+                <button class="color-dot" data-color="#06b6d4" style="background:#06b6d4;"></button>
+                <button class="color-dot" data-color="#f59e0b" style="background:#f59e0b;"></button>
+                <button class="color-dot" data-color="#ec4899" style="background:#ec4899;"></button>
+              </div>
+
+              <button class="btn btn-secondary full-width" id="btn-save-avatar" style="margin-top:15px;">Spara Avatar</button>
+            </div>
+          </div>
+
+          <!-- Leaderboard -->
+          <div class="card">
+            <div class="card-header">
+              <h3>🏆 Kompis-Topplista (Veckans Poäng)</h3>
+              <button class="btn btn-sm btn-secondary" id="btn-challenge-friend">⚔️ Utmana Vän</button>
+            </div>
+            <table class="leaderboard-table">
+              <thead>
+                <tr>
+                  <th>Rank</th>
+                  <th>Atlet</th>
+                  <th>Nivå</th>
+                  <th>Veckovolym</th>
+                  <th>Poäng</th>
+                </tr>
+              </thead>
+              <tbody id="leaderboard-body">
+                <!-- Injected via app.js -->
+              </tbody>
+            </table>
+          </div>
+        </div>
+      </section>
+
+      <!-- ANALYTICS & GOALS -->
+      <section id="tab-analytics" class="tab-view">
+        <header class="section-header">
+          <h2>Statistik & Måluppföljning</h2>
+          <p class="subtitle">Följ progressionen för concurrent training över tid utan att tappa styrka eller fart.</p>
+        </header>
+
+        <div class="analytics-charts-grid">
+          <div class="card">
+            <h3>Konditionsvolym (km per vecka)</h3>
+            <canvas id="runningChart" height="200"></canvas>
+          </div>
+          <div class="card">
+            <h3>Styrkeutveckling & Tonnage (Ton)</h3>
+            <canvas id="strengthChart" height="200"></canvas>
+          </div>
+        </div>
+
+        <div class="card" style="margin-top: 24px;">
+          <h3>🎯 Vad krävs för att nå dina mål? (Målanalys)</h3>
+          <div class="goal-milestones-grid" id="goals-recommendation-box">
+            <div class="milestone-box">
+              <h4>Mål: Sub-22:30 på 5 km</h4>
+              <p><strong>Aktuellt läge:</strong> 23:45</p>
+              <p><strong>Insats krävs:</strong> Öka andelen tröskelintervaller (t.ex. 4x1000m vid 4:25 min/km) från 15% till 20% av veckovolymen. Behåll Zon 2 som återhämtning.</p>
+            </div>
+            <div class="milestone-box">
+              <h4>Mål: Strikt Muscle-Up</h4>
+              <p><strong>Aktuellt läge:</strong> Explosiva Chins +20 kg</p>
+              <p><strong>Insats krävs:</strong> Lägg in högdrag och räckhäv med bröstet mot stången i början av Pull-passen före all trötthet. Separera med 8h från morgonlöpning.</p>
+            </div>
+          </div>
+        </div>
+      </section>
+    </main>
+  </div>
+
+  <script src="generator.js"></script>
+  <script src="app.js"></script>
+</body>
+</html>
